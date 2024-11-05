@@ -1,0 +1,1 @@
+This repository contains scripts and tools to handle the migration of data from a MySQL container to a PostgreSQL container. It includes a Python script that manages the data transfer process.
