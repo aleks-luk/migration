@@ -2,8 +2,12 @@ This project generates data, loads it into a MySQL database, and then migrates t
 It consists of several scripts and configuration files, including a Docker Compose file that runs the required database
 containers.
 
+Before running scripts please provide following environment variables:
+MYSQL_PASSWORD,
+MYSQL_ROOT_PASSWORD,
+POSTGRES_PASSWORD
+
 The setup_environment.sh script performs the one-time environment configuration steps, including:
-- setting the environment variables,
 - creating and activating the virtual environment,
 - installing the required Python libraries,
 - pulling Docker images and starting Docker containers for MySQL and PostgreSQL.

@@ -1,7 +1,6 @@
 {
   "mysql": {
     "user": "mysql_user",
-    "password": "${MYSQL_PASSWORD}",
     "db": "source_db",
     "host": "localhost",
     "port": 3306,
@@ -11,7 +10,6 @@
     "postgres": {
         "host": "localhost",
         "user": "postgres_user",
-        "password": "${POSTGRES_PASSWORD}",
         "database": "target_db",
         "port": 5432
     },
