@@ -3,10 +3,10 @@ services:
   mysql:
     image: mysql:8
     environment:
-      MYSQL_ROOT_PASSWORD: MySQLRootPWD
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: source_db
       MYSQL_USER: mysql_user
-      MYSQL_PASSWORD: MySQLUserPWD
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
@@ -16,7 +16,7 @@ services:
     image: postgres:13
     environment:
       POSTGRES_USER: postgres_user
-      POSTGRES_PASSWORD: PostgresUserPWD
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: target_db
     ports:
       - "5432:5432"
