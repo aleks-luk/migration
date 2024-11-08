@@ -2,13 +2,20 @@ This project generates data, loads it into a MySQL database, and then migrates t
 It consists of several scripts and configuration files, including a Docker Compose file that runs the required database
 containers.
 
-Setup
-The setup_environment.sh script will perform all the environment configuration steps, including:
+The setup_environment.sh script performs the one-time environment configuration steps, including:
 - setting the environment variables,
 - creating and activating the virtual environment,
 - installing the required Python libraries,
-- running Docker containers for MySQL and PostgreSQL,
-- generating test data and performing data migration.
+- pulling Docker images and starting Docker containers for MySQL and PostgreSQL.
+
+After running setup_environment.sh, further migrations and data generation should be performed with the run_migration.sh
+script, which:
+- activates the virtual environment,
+- generates any necessary sample data, and
+- runs the data migration process.
+
+With this setup, the environment configuration needs to be done only once. You can then use run_migration.sh to repeat
+data migrations without redoing the setup each time.
 
 File docker-compose.yml
 The docker-compose.yml file is used to run two Docker containers: one for MySQL and one for PostgreSQL. This allows both
