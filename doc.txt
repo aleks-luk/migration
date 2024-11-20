@@ -1,0 +1,67 @@
+This project generates data, loads it into a MySQL database, and then migrates that data into a PostgreSQL database.
+It consists of several scripts and configuration files, including a Docker Compose file that runs the required database
+containers.
+
+Before running scripts please provide following environment variables:
+MYSQL_PASSWORD,
+MYSQL_ROOT_PASSWORD,
+POSTGRES_PASSWORD
+
+The setup_environment.sh script performs the one-time environment configuration steps, including:
+- creating and activating the virtual environment,
+- installing the required Python libraries,
+- pulling Docker images and starting Docker containers for MySQL and PostgreSQL.
+
+After running setup_environment.sh, further migrations and data generation should be performed with the run_migration.sh
+script, which:
+- activates the virtual environment,
+- generates any necessary sample data, and
+- runs the data migration process.
+
+With this setup, the environment configuration needs to be done only once. You can then use run_migration.sh to repeat
+data migrations without redoing the setup each time.
+
+File docker-compose.yml
+The docker-compose.yml file is used to run two Docker containers: one for MySQL and one for PostgreSQL. This allows both
+databases to run in isolated environments without the need to install local instances of these databases.
+
+File generate_data.py
+This script generates sample data in CSV file, which will later be loaded to the first container with MySQL database.
+Functions:
+- sample_data_generator,
+- load_config,
+- create_mysql_engine,
+- get_data_from_file,
+- put_data_into_mysql.
+
+File migrate.py
+The migrate.py script migrates data from MySQL to PostgreSQL, transfering data from the mysql_sample_table table
+to the pg_sample_table table in PostgreSQL.
+Functions:
+- create_postgres_connection,
+- create_staging_table,
+- read_data_from_mysql(query, con),
+- migration_memory_usage,
+- insert_data_to_postgres.
+Last function takes three parameters: connection - which is provided by create_postgres_connection function,
+data - which is provided by read_data_from_mysql function and the page_size.
+page_size - maximum number of argslist items to include in every statement. If there are more items the function
+will execute more than one statement. This is a definition from https://www.psycopg.org/docs/extras.html
+It determines how many rows are inserted per INSERT statement. For example, we want to migrate 10 000 rows,
+this function will insert data in 10 batches (each with 1000 rows) executing 10 separate INSERT statements. It matters
+when we want to move large datasets.
+I found out about it from this interesting article https://hakibenita.com/fast-load-data-python-postgresql.
+It helped me choose an efficient way to load data.
+
+Migration performance test:
+I have ran some tests by manipulating page_size parameter and method.
+First method psycopg2.extras.execute_batch with page_size 10000:
+Time: 135.10 s Memory: 1363.80 MB
+Same method with smaller page_size 1000
+Time: 108.41 s Memory: 209.61 MB - a bit quicker and a lot of less memory usage
+Second method psycopg2.extras.execute_values page_size 20000
+Time: 90.59 s Memory: 1131.79 MB
+Same method with smaller page_size 2000
+Time: 73.39 s Memory: 256.86 MB - it seems this is a satisfying outcome
+In conclusion the results shows the more rows in one batch the more time it takes and consumes more memory.
+So in my case, migrating 2 millions rows the best scenario is to choose execute_values method with page_size = 2000

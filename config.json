@@ -1,0 +1,19 @@
+{
+  "mysql": {
+    "user": "mysql_user",
+    "db": "source_db",
+    "host": "localhost",
+    "port": 3306,
+    "mysql_image": "mysql:8",
+    "docker_compose_file": "docker-compose.yml"
+    },
+    "postgres": {
+        "host": "localhost",
+        "user": "postgres_user",
+        "database": "target_db",
+        "port": 5432
+    },
+    "csv": {
+        "source_path": "/Users/alex/Documents/large_amazon_reviews.csv"
+    }
+}
